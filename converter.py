@@ -25,18 +25,17 @@ class Conveter:
 
 def main():
     """Точка входа в программу."""
-    if len(sys.argv) == 2:
+    args_number = len(sys.argv)
+    if args_number > 1 and args_number < 4:
+        path = sys.argv[2] if args_number == 3 else 'propobilities.json'
         sheet_name = 'Common'
-        data = pandas.read_excel(sys.argv[1],
-                                 sheet_name=sheet_name,
-                                 skiprows=1,
-                                 usecols=lambda column: column != 0,
-                                 header=None)
+        data = pandas.read_excel(sys.argv[1], header=None, sheet_name=sheet_name,
+                                 skiprows=1, engine='openpyxl',
+                                 usecols=lambda column: column != 0)
         converter = Conveter()
-        with open('propobilities.json', 'w', encoding='utf-8') as f:
+        with open(path, 'w', encoding='utf-8') as f:
             json.dump(converter.convert(data), f, ensure_ascii=False, indent=4)
-
-        print('Конвертация еспешно завершена')
+        print('Конвертация успешно завершена')
     elif len(sys.argv) == 1:
         print('Ошибка! Не указано имя файла!')
     else:
